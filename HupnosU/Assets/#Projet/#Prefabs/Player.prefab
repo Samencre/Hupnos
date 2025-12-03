@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 816667625661178888}
   - component: {fileID: 469718772758573690}
   - component: {fileID: 1331188261374892552}
+  - component: {fileID: 4118318271924846016}
   - component: {fileID: 1799780273187693400}
   - component: {fileID: 2999254264150235453}
   m_Layer: 0
@@ -106,6 +107,22 @@ MonoBehaviour:
   rb: {fileID: 1799780273187693400}
   anim: {fileID: 2999254264150235453}
   sr: {fileID: 469718772758573690}
+--- !u!114 &4118318271924846016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6226193901248042889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6471f8c5fa7a5b64db5894d21c0c2a3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nightmare: {fileID: 0}
+  attackRange: 1.5
+  damageAttack: 1
+  damageCry: 2
 --- !u!50 &1799780273187693400
 Rigidbody2D:
   serializedVersion: 5

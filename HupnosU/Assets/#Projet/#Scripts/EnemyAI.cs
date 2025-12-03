@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
+using UnityEngine.Rendering;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -29,6 +30,14 @@ public class EnemyAI : MonoBehaviour
     // Composant Rigidbody2D utilisé pour le mouvement physique de l'ennemi
     public Rigidbody2D rb;
 
+    public Animator anim;
+
+    public SpriteRenderer sr;
+
+    public float attackCooldown = 2f;
+
+    private float currentCooldown = 0;
+
     // Méthode appelée au début de l'exécution
     void Start()
     {
@@ -53,6 +62,23 @@ public class EnemyAI : MonoBehaviour
         {
             path = p;
             currWp = 0;
+        }
+    }
+
+    void Update() 
+    {
+        anim.SetFloat("Speed", rb.linearVelocity.sqrMagnitude);
+
+        if(rb.linearVelocity.x != 0)
+        {
+            sr.flipX = rb.linearVelocity.x < 0;
+        }
+
+        currentCooldown -= Time.deltaTime;
+
+        if(currentCooldown < 0)
+        {
+            currentCooldown = 0;
         }
     }
 
@@ -91,6 +117,24 @@ public class EnemyAI : MonoBehaviour
             {
                 currWp++;
             }
+        } else
+        {
+            if(currentCooldown <= 0)
+            {
+                Attack();
+            }
         }
     }
+
+    void Attack()
+    {
+        anim.SetBool("isAttacking", true);
+        currentCooldown = attackCooldown;
+        anim.SetTrigger("Attack");
+    }
+
+    // void EndAttack()
+    // {
+    //     anim.SetBool("isAttacking", false);
+    // }
 }
