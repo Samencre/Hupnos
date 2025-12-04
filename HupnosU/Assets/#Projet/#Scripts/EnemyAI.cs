@@ -18,6 +18,8 @@ public class EnemyAI : MonoBehaviour
     // Distance minimale pour déclencher une attaque (l'ennemi s'arrête en dehors de cette portée)
     public float attackRange = 2f;
 
+    public float detectionrange = 8f;
+
     // Chemin calculé par le Seeker
     public Path path;
 
@@ -36,7 +38,17 @@ public class EnemyAI : MonoBehaviour
 
     public float attackCooldown = 2f;
 
-    private float currentCooldown = 0;
+    private float currentCooldown = 0f;
+
+    public int damage = 1;
+    private bool isAlive = true;
+    public int maxHealth = 4;
+    private int currentHealth;
+
+    void Awake()
+    {
+        currentHealth = maxHealth;
+    }
 
     // Méthode appelée au début de l'exécution
     void Start()
@@ -49,7 +61,7 @@ public class EnemyAI : MonoBehaviour
     void UpdatePath()
     {
         // Vérifie si le Seeker est prêt à calculer un nouveau chemin
-        if (seeker.IsDone())
+        if (isAlive && seeker.IsDone() && Vector2.Distance(transform.position, target.position) <= detectionrange)
             // Demande un nouveau chemin du Seeker entre la position actuelle et la cible
             seeker.StartPath(rb.position, target.position, OnPathComplete);
     }
@@ -67,18 +79,21 @@ public class EnemyAI : MonoBehaviour
 
     void Update() 
     {
-        anim.SetFloat("Speed", rb.linearVelocity.sqrMagnitude);
-
-        if(rb.linearVelocity.x != 0)
+        if (isAlive)
         {
-            sr.flipX = rb.linearVelocity.x < 0;
-        }
+            anim.SetFloat("Speed", rb.linearVelocity.sqrMagnitude);
 
-        currentCooldown -= Time.deltaTime;
+            if(rb.linearVelocity.x != 0)
+            {
+                sr.flipX = rb.linearVelocity.x < 0;
+            }
 
-        if(currentCooldown < 0)
-        {
-            currentCooldown = 0;
+            currentCooldown -= Time.deltaTime;
+
+            if(currentCooldown < 0)
+            {
+                currentCooldown = 0;
+            }
         }
     }
 
@@ -86,7 +101,7 @@ public class EnemyAI : MonoBehaviour
     void FixedUpdate()
     {
         // Si aucun chemin n'a été calculé ou si tous les waypoints ont été atteints, ne fait rien
-        if (path == null || currWp >= path.vectorPath.Count)
+        if (path == null || currWp >= path.vectorPath.Count || !isAlive)
         {
             return;
         }
@@ -117,7 +132,8 @@ public class EnemyAI : MonoBehaviour
             {
                 currWp++;
             }
-        } else
+        } 
+        else 
         {
             if(currentCooldown <= 0)
             {
@@ -133,8 +149,34 @@ public class EnemyAI : MonoBehaviour
         anim.SetTrigger("Attack");
     }
 
-    // void EndAttack()
-    // {
-    //     anim.SetBool("isAttacking", false);
-    // }
+    void EndAttack()
+    {
+        anim.SetBool("isAttacking", false);
+
+        if(Vector2.Distance(transform.position, target.position) <= attackRange)
+        {
+            target.GetComponent<PlayerHealth>().TakeDanage(damage);
+        }
+    }
+
+        public void TakeDanage(int damage)
+    {
+        if (isAlive)
+        {
+            currentHealth -= damage;
+
+            if(currentHealth <= 0)
+            {
+                isAlive = false;
+                anim.SetTrigger("Die");
+                Destroy(gameObject, 3f);
+            }
+            else
+            {
+                anim.SetTrigger("Hit");
+                currentCooldown = attackCooldown;
+            }
+        }
+    }
+
 }

@@ -3,17 +3,22 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     public float attackRange = 1.5f;
-    public int damageAttack = 1;
-    public int damageCry = 2;
+    public int damage = 1;
+    public int knockbackForce = 5;
     public SpriteRenderer sr;
     public Animator anim;
+    public PlayerHealth playerHealth;
+
 
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (playerHealth.isAlive)
         {
-            PerformAttack();
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                PerformAttack();
+            }
         }
         
     }
@@ -30,7 +35,11 @@ public class PlayerAttack : MonoBehaviour
                 Vector2 directionToNightmare = (collider.transform.position - transform.position).normalized;
                 if(Vector2.Dot(attackDirection, directionToNightmare) > 0)
                 {
-                    Debug.Log("Player: Attack Nightmare!");
+                    EnemyAI AI = collider.GetComponent<EnemyAI>();
+                    AI.TakeDanage(damage);
+
+                    Vector2 knockbackDirection = (collider.transform.position -transform.position).normalized;
+                    AI.rb.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
                 }
             }
         }
