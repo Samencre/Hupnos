@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1799780273187693400}
   - component: {fileID: 2999254264150235453}
   - component: {fileID: 5699734203080277327}
+  - component: {fileID: 3835283048264873008}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -80,7 +81,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_Sprite: {fileID: 8092496808608137374, guid: 364e9a7cddcce104baf591425e973629, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -108,6 +109,7 @@ MonoBehaviour:
   rb: {fileID: 1799780273187693400}
   anim: {fileID: 2999254264150235453}
   sr: {fileID: 469718772758573690}
+  playerHealth: {fileID: 3835283048264873008}
 --- !u!114 &4118318271924846016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121,10 +123,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackRange: 1.5
-  damageAttack: 1
-  damageCry: 2
+  damage: 1
+  knockbackForce: 5
   sr: {fileID: 469718772758573690}
   anim: {fileID: 2999254264150235453}
+  playerHealth: {fileID: 3835283048264873008}
 --- !u!50 &1799780273187693400
 Rigidbody2D:
   serializedVersion: 5
@@ -210,3 +213,21 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -0.48}
   m_Radius: 0.3
+--- !u!114 &3835283048264873008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6226193901248042889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00df450ba84718d4a90039819a88971b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 8
+  isAlive: 1
+  healthbarUI: {fileID: 0}
+  hp: {fileID: 6855738176375357557, guid: 4e52641f4b16f224d8ed3edc314b13f2, type: 3}
+  anim: {fileID: 2999254264150235453}
+  sr: {fileID: 469718772758573690}

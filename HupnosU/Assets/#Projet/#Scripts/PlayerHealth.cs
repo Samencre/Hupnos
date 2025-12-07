@@ -3,12 +3,13 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
     public int maxHealth = 8;
-    private int currentHealth;
+    [SerializeField]private int currentHealth;
     public bool isAlive = true;
     public Transform healthbarUI;
     public GameObject hp;
     public Animator anim;
     public SpriteRenderer sr;
+    public bool healthUp = false;
 
     void Awake()
     {
@@ -47,6 +48,20 @@ public class PlayerHealth : MonoBehaviour
     public void DisablePlayerVisual()
     {
         sr.enabled = false;
+    }
+
+        public void Heal(int heal)
+    {
+        if(currentHealth < maxHealth)
+        {
+            healthUp= true;
+            currentHealth += heal;
+            anim.SetTrigger("Heal");
+            UpdateHealthbarUI();
+            if (currentHealth > maxHealth) currentHealth = maxHealth;
+            
+        }
+        healthUp = false;
     }
 
 

@@ -136,11 +136,14 @@ MonoBehaviour:
   speed: 120
   nextWpDistance: 1
   attackRange: 1.5
+  detectionrange: 8
   seeker: {fileID: 8675669867978625739}
   rb: {fileID: 4857839630076357259}
   anim: {fileID: 8596373263379845088}
   sr: {fileID: 453740966599982554}
   attackCooldown: 2
+  damage: 1
+  maxHealth: 4
 --- !u!50 &4857839630076357259
 Rigidbody2D:
   serializedVersion: 5
