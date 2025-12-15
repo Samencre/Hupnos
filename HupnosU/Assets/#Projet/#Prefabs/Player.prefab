@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 816667625661178888}
   - component: {fileID: 469718772758573690}
   - component: {fileID: 1331188261374892552}
-  - component: {fileID: 4118318271924846016}
   - component: {fileID: 1799780273187693400}
   - component: {fileID: 2999254264150235453}
   - component: {fileID: 5699734203080277327}
   - component: {fileID: 3835283048264873008}
-  m_Layer: 8
+  - component: {fileID: 6780169180080425620}
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -81,8 +81,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
-  m_Sprite: {fileID: 8092496808608137374, guid: 364e9a7cddcce104baf591425e973629, type: 3}
+  m_SortingOrder: 8
+  m_Sprite: {fileID: 5698492667189742446, guid: 54c4e8e8e522fd0478daf522de8868ef, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -109,24 +109,6 @@ MonoBehaviour:
   rb: {fileID: 1799780273187693400}
   anim: {fileID: 2999254264150235453}
   sr: {fileID: 469718772758573690}
-  playerHealth: {fileID: 3835283048264873008}
---- !u!114 &4118318271924846016
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6226193901248042889}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6471f8c5fa7a5b64db5894d21c0c2a3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackRange: 1.5
-  damage: 1
-  knockbackForce: 5
-  sr: {fileID: 469718772758573690}
-  anim: {fileID: 2999254264150235453}
   playerHealth: {fileID: 3835283048264873008}
 --- !u!50 &1799780273187693400
 Rigidbody2D:
@@ -226,8 +208,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 8
+  currentHealth: 0
   isAlive: 1
   healthbarUI: {fileID: 0}
-  hp: {fileID: 6855738176375357557, guid: 4e52641f4b16f224d8ed3edc314b13f2, type: 3}
+  hpIcon: {fileID: 6933026747251665586, guid: 78c8cb54f43ab4648b665101a2f93e99, type: 3}
   anim: {fileID: 2999254264150235453}
   sr: {fileID: 469718772758573690}
+--- !u!114 &6780169180080425620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6226193901248042889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3156283f7f3e5b04a93b909c2fdfc7fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackRange: 1.5
+  damage: 1
+  sr: {fileID: 469718772758573690}
+  anim: {fileID: 2999254264150235453}
+  playerHealth: {fileID: 3835283048264873008}

@@ -15,6 +15,9 @@ GameObject:
   - component: {fileID: 4857839630076357259}
   - component: {fileID: 3974811592040297785}
   - component: {fileID: 8596373263379845088}
+  - component: {fileID: 5568623011312233517}
+  - component: {fileID: 5293337585418154981}
+  - component: {fileID: -4239530018041381351}
   m_Layer: 7
   m_Name: Nightmare
   m_TagString: Nightmare
@@ -132,18 +135,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5201d8e97d2284365a8c2b816f70485f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  speed: 120
-  nextWpDistance: 1
+  target: {fileID: 816667625661178888, guid: 8a84af10d99cc2145a45e3b5c8ced842, type: 3}
+  detectionRange: 8
   attackRange: 1.5
-  detectionrange: 8
-  seeker: {fileID: 8675669867978625739}
-  rb: {fileID: 4857839630076357259}
-  anim: {fileID: 8596373263379845088}
-  sr: {fileID: 453740966599982554}
-  attackCooldown: 2
-  damage: 1
-  maxHealth: 4
+  speed: 120
+  nextWaypointDistance: 1
 --- !u!50 &4857839630076357259
 Rigidbody2D:
   serializedVersion: 5
@@ -169,7 +165,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!58 &3974811592040297785
 CircleCollider2D:
@@ -201,7 +197,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -229,3 +225,45 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5568623011312233517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6801653059533494739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8fe2151bcba77479b8c727fd79b2a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 4
+--- !u!114 &5293337585418154981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6801653059533494739}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1ca1844dc6046c46ba3932c35c2a0bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 1
+  attackCooldown: 2
+  target: {fileID: 816667625661178888, guid: 8a84af10d99cc2145a45e3b5c8ced842, type: 3}
+--- !u!114 &-4239530018041381351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6801653059533494739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8532169bd66eea3488465b4478dfcb2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 1
+  damageCooldown: 1.5

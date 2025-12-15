@@ -1,182 +1,106 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
-using UnityEngine.Rendering;
+
+[RequireComponent(typeof(Rigidbody2D), typeof(Seeker))]
 
 public class EnemyAI : MonoBehaviour
 {
-    // Cible que l'ennemi doit suivre (par exemple, le joueur)
     public Transform target;
-
-    // Vitesse de déplacement de l'ennemi
+    public float detectionRange = 8f;
+    public float attackRange = 2.5f;
     public float speed = 120f;
-
-    // Distance à laquelle l'ennemi considère qu'il a atteint un waypoint
-    public float nextWpDistance = 1f;
-
-    // Distance minimale pour déclencher une attaque (l'ennemi s'arrête en dehors de cette portée)
-    public float attackRange = 2f;
-
-    public float detectionrange = 8f;
-
-    // Chemin calculé par le Seeker
-    public Path path;
-
-    // Indice du waypoint actuel que l'ennemi essaie d'atteindre
-    int currWp = 0;
-
-    // Composant Seeker utilisé pour calculer le chemin
-    public Seeker seeker;
-
-    // Composant Rigidbody2D utilisé pour le mouvement physique de l'ennemi
-    public Rigidbody2D rb;
-
-    public Animator anim;
-
-    public SpriteRenderer sr;
-
-    public float attackCooldown = 2f;
-
-    private float currentCooldown = 0f;
-
-    public int damage = 1;
-    private bool isAlive = true;
-    public int maxHealth = 4;
-    private int currentHealth;
+    public float nextWaypointDistance = 1f;
+    private Seeker seeker;
+    private Rigidbody2D rb;
+    private Animator anim;
+    private SpriteRenderer sr;
+    private EnemyHealth health;
+    private EnemyCombat combat;
+    private Path path;
+    private int currentWaypoint = 0;
 
     void Awake()
     {
-        currentHealth = maxHealth;
+        seeker = GetComponent<Seeker>();
+        rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
+        sr = GetComponent<SpriteRenderer>();
+        health = GetComponent<EnemyHealth>();
+        combat = GetComponent<EnemyCombat>();
     }
 
-    // Méthode appelée au début de l'exécution
     void Start()
     {
-        // Met à jour le chemin toutes les 0,5 secondes pour suivre la position du joueur
-        InvokeRepeating("UpdatePath", 0, 0.5f);
+        InvokeRepeating(nameof(UpdatePath), 0f, 0.5f);
     }
 
-    // Méthode pour mettre à jour le chemin vers la cible
     void UpdatePath()
     {
-        // Vérifie si le Seeker est prêt à calculer un nouveau chemin
-        if (isAlive && seeker.IsDone() && Vector2.Distance(transform.position, target.position) <= detectionrange)
-            // Demande un nouveau chemin du Seeker entre la position actuelle et la cible
-            seeker.StartPath(rb.position, target.position, OnPathComplete);
+        if (!health.IsAlive) return;
+        if (!seeker.IsDone()) return;
+
+        float dist = Vector2.Distance(transform.position, target.position);
+        if (dist > detectionRange) return;
+
+        seeker.StartPath(rb.position, target.position, OnPathComplete);
     }
 
-    // Méthode appelée lorsque le Seeker a terminé de calculer un chemin
     void OnPathComplete(Path p)
     {
-        // Si le calcul a réussi (pas d'erreur), met à jour le chemin et réinitialise l'indice du waypoint
         if (!p.error)
         {
             path = p;
-            currWp = 0;
+            currentWaypoint = 0;
         }
     }
 
-    void Update() 
+    void Update()
     {
-        if (isAlive)
-        {
-            anim.SetFloat("Speed", rb.linearVelocity.sqrMagnitude);
-
-            if(rb.linearVelocity.x != 0)
-            {
-                sr.flipX = rb.linearVelocity.x < 0;
-            }
-
-            currentCooldown -= Time.deltaTime;
-
-            if(currentCooldown < 0)
-            {
-                currentCooldown = 0;
-            }
-        }
+        if (!health.IsAlive) return;
+        anim.SetFloat("Speed", rb.linearVelocity.sqrMagnitude);
+        FlipTowardsPlayer();
     }
 
-    // Méthode appelée à chaque frame fixe pour gérer les mouvements physiques
     void FixedUpdate()
     {
-        // Si aucun chemin n'a été calculé ou si tous les waypoints ont été atteints, ne fait rien
-        if (path == null || currWp >= path.vectorPath.Count || !isAlive)
+        if (!health.IsAlive)
         {
+            rb.linearVelocity = Vector2.zero;
             return;
         }
 
-        // Calcule la distance entre l'ennemi et le joueur
-        float playerDistance = Vector2.Distance(target.transform.position, transform.position);
-
-        // Si le joueur est en dehors de la portée d'attaque = on le poursuit
-        if (playerDistance > attackRange)
+        float dist = Vector2.Distance(transform.position, target.position);
+        if (dist > attackRange)
         {
-            // Calcule la direction vers le prochain waypoint
-            Vector2 direction = ((Vector2)path.vectorPath[currWp] - rb.position).normalized;
-
-            // Lisser la direction pour éviter des changements brusques (interpolation)
-            Vector2 smoothDirection = Vector2.Lerp(rb.linearVelocity.normalized, direction, 0.1f);
-
-            // Calcule la vitesse en fonction de la direction et de la vitesse spécifiée
-            Vector2 velocity = smoothDirection * speed * Time.fixedDeltaTime;
-
-            // Applique la vitesse calculée au Rigidbody2D
-            rb.linearVelocity = velocity;
-
-            // Calcule la distance entre l'ennemi et le waypoint actuel
-            float distance = Vector2.Distance(rb.position, path.vectorPath[currWp]);
-
-            // Si l'ennemi est suffisamment proche du waypoint, passe au suivant
-            if (distance < nextWpDistance)
-            {
-                currWp++;
-            }
-        } 
-        else 
+            MoveAlongPath();
+        }
+        else
         {
-            if(currentCooldown <= 0)
-            {
-                Attack();
-            }
+            rb.linearVelocity = Vector2.zero;
+            combat.TryAttack(attackRange);
         }
     }
 
-    void Attack()
+    void MoveAlongPath()
     {
-        anim.SetBool("isAttacking", true);
-        currentCooldown = attackCooldown;
-        anim.SetTrigger("Attack");
-    }
-
-    void EndAttack()
-    {
-        anim.SetBool("isAttacking", false);
-
-        if(Vector2.Distance(transform.position, target.position) <= attackRange)
+        if (path == null || currentWaypoint >= path.vectorPath.Count)
         {
-            target.GetComponent<PlayerHealth>().TakeDanage(damage);
+            rb.linearVelocity = Vector2.zero;
+            return;
         }
+        Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
+        Vector2 velocity = direction * speed * Time.fixedDeltaTime;
+        rb.linearVelocity = velocity;
+
+        float distance = Vector2.Distance(rb.position, path.vectorPath[currentWaypoint]);
+        if (distance < nextWaypointDistance)
+            currentWaypoint++;
     }
 
-        public void TakeDanage(int damage)
+    void FlipTowardsPlayer()
     {
-        if (isAlive)
-        {
-            currentHealth -= damage;
-
-            if(currentHealth <= 0)
-            {
-                isAlive = false;
-                anim.SetTrigger("Die");
-                Destroy(gameObject, 3f);
-            }
-            else
-            {
-                anim.SetTrigger("Hit");
-                currentCooldown = attackCooldown;
-            }
-        }
+        if (target == null) return;
+        sr.flipX = target.position.x < transform.position.x;
     }
-
 }
+

@@ -124,5 +124,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 4173030258980721838}
-  player: {fileID: 0}
+  player: {fileID: 816667625661178888, guid: 8a84af10d99cc2145a45e3b5c8ced842, type: 3}
   itemRange: 1.5

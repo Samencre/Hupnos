@@ -4,27 +4,20 @@ public class PlayerMove : MonoBehaviour
 {
     public float speed = 3f;
     private Vector2 move;
-    public Rigidbody2D rb ; 
+    public Rigidbody2D rb;
     public Animator anim;
     public SpriteRenderer sr;
     public PlayerHealth playerHealth;
 
     void Update()
     {
-        if (playerHealth.isAlive)
-        {
-            move.x = Input.GetAxisRaw("Horizontal"); 
-            move.y = Input.GetAxisRaw("Vertical");
-            
-            move = move.normalized;
-
-            anim.SetFloat("Speed", move.sqrMagnitude); // sqr plus rapide
-
-            if(move.x != 0)
-            {
-                sr.flipX = move.x < 0;
-            }
-        }
+        if (!playerHealth.isAlive) return;
+        move.x = Input.GetAxisRaw("Horizontal");
+        move.y = Input.GetAxisRaw("Vertical");
+        move = move.normalized;
+        anim.SetFloat("Speed", move.sqrMagnitude);
+        if (move.x != 0)
+            sr.flipX = move.x < 0;
     }
 
     void FixedUpdate()
@@ -32,4 +25,6 @@ public class PlayerMove : MonoBehaviour
         rb.linearVelocity = move * speed;
     }
 }
+
+
 
