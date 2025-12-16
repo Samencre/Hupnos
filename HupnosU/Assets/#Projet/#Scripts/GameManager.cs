@@ -6,7 +6,6 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public string winSceneName = "Win";
     public string gameOverSceneName = "GameOver";
-    public FadeManager fadeManager;
     public bool isPaused;
     public bool gameEnded;
 
@@ -21,11 +20,6 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    void Update()
-    {
-        if (!gameEnded && Input.GetKeyDown(KeyCode.Escape))
-            TogglePause();
-    }
 
     public void TogglePause()
     {
@@ -33,21 +27,23 @@ public class GameManager : MonoBehaviour
         Time.timeScale = isPaused ? 0f : 1f;
     }
 
-    public void WinGame()
-    {
-        if (gameEnded) return;
-        gameEnded = true;
-        Time.timeScale = 1f;
-        fadeManager?.FadeToScene(winSceneName);
-    }
+public void WinGame()
+{
+    if (gameEnded) return;
+    gameEnded = true;
+    Time.timeScale = 1f;
+    SceneManager.LoadScene(winSceneName);
+}
 
-    public void GameOver()
-    {
-        if (gameEnded) return;
-        gameEnded = true;
-        Time.timeScale = 1f;
-        fadeManager?.FadeToScene(gameOverSceneName);
-    }
+
+public void GameOver()
+{
+    if (gameEnded) return;
+    gameEnded = true;
+    Time.timeScale = 1f;
+    SceneManager.LoadScene(gameOverSceneName);
+}
+
 
     public void RestartGame()
     {

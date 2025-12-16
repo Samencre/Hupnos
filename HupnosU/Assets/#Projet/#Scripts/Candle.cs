@@ -2,12 +2,9 @@ using UnityEngine;
 
 public class Candles : MonoBehaviour
 {
-    [Header("References")]
     public Transform player;
     public Animator animator;
     private PlayerHealth playerHealth;
-
-    [Header("Settings")]
     public float candleRange = 1.5f; 
     public float safeZone = 4f; 
     public int heal = 1; 
